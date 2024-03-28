@@ -1,6 +1,6 @@
 # zcache [![Latest Version](https://img.shields.io/crates/v/zcache.svg)](https://crates.io/crates/zcache) [![GH Actions](https://github.com/pawurb/zcache/actions/workflows/ci.yml/badge.svg)](https://github.com/pawurb/zcache/actions)
 
-Zcache is an in-memory cache store with time-based expiration. This project aims to provide a straightforward API to cache any part of a Rust application without a need to rewrite other parts of the callstack.
+Zcache is an in-memory cache store with time-based expiration. This project aims to provide a straightforward API to cache any part of a Rust application without a need to modify other parts of the callstack.
 
 ## Usage
 
@@ -62,6 +62,6 @@ In the above example, the async function `write` can periodically refresh price 
 
 ## Status
 
-All these methods are just fancy wrappers over `unsafe` mutable static variable, so proceed with caution. Data races in multithreaded environments are expected. But, since I'm using it only for caching, so I assumed it's acceptable. 
+All these methods are just fancy wrappers over `unsafe` mutable static variable, so proceed with caution. Data races in multithreaded environments are expected. But, since I'm using it only for caching, I assumed it's acceptable. 
 
 I'm using `zcache` in a production app, but please treat it as proof of concept. I have limited Rust experience, so feedback is appreciated.

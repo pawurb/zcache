@@ -158,18 +158,4 @@ mod tests {
         }
         Ok(())
     }
-
-    #[tokio::test]
-    async fn get_ether_price() -> Result<(), ZCacheError> {
-        if let ZEntry::Float(value) =
-            ZCache::fetch("ether-price", Some(Duration::from_secs(60)), || async {
-                Some(ZEntry::Float(1.1))
-            })
-            .await?
-        {
-            println!("Value: {}", value);
-            Ok(())
-        }
-        Ok(())
-    }
 }
