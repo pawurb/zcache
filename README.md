@@ -24,13 +24,16 @@ enum ZEntry {
 ```rust
 
 async fn get_ether_price() -> Result<f64> {
-  ZCache::fetch("ether-price", Some(Duration::from_secs(60)), || async {
-      let price: f64 = json_client.get.await...
+  match ZCache::fetch("ether-price", Some(Duration::from_secs(60)), || async {
+      let price: f64 = json_client.get().await...
       // logic to extract price from URL ...
 
       Some(ZEntry::Float(price))
   })
-  .await?
+  .await? {
+      ZEntry::Float(price) => Ok(price),
+      _ => panic!("Unexpected type!"),
+  }
 }
 
 ```
@@ -43,8 +46,8 @@ One limitation is that async callback cannot return an `Err` so you must communi
 
 ```rust
 async fn refresh_ether_price() -> Result<()> {
-  let price: f64 = json_client.get.await...
-  let price = Some(ZEntry::Float(price))
+  let price: f64 = json_client.get().await...
+  let price = ZEntry::Float(price);
 
   ZCache::write("ether-price", price, Some(Duration::from_secs(60)))
   Ok(())
@@ -57,6 +60,8 @@ fn get_ether_price() -> Some(f64) {
 
 In the above example, the async function `write` can periodically refresh price fetched from an URL. The advantage of `read` over `fetch` is that it's not `async`, so it's possible to use it in non-async parts of your application.
 
-But `read` and `write` are a fancy wrappers over `unsafe` mutable static variable, so proceed with caution.
+## Status
 
-I'm using `zache` in a production app, but please treat it as proof of concept. I have limited Rust experience, so feedback is appreciated.
+All these methods are just fancy wrappers over `unsafe` mutable static variable, so proceed with caution. Data races in multithreaded environments are expected. But, since I'm using it only for caching, so I assumed it's acceptable. 
+
+I'm using `zcache` in a production app, but please treat it as proof of concept. I have limited Rust experience, so feedback is appreciated.

@@ -129,7 +129,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn fetch_expiry_works() {
+    async fn fetch_expiry_works() -> Result<(), ZCacheError> {
         let cacheable = ZEntry::Int(1);
         let one_second = Duration::from_secs(1);
         let result = ZCache::fetch("key1", Some(one_second), || async {
@@ -141,11 +141,35 @@ mod tests {
             _ => panic!("Unexpected value"),
         }
 
+        let result = match ZCache::fetch("key1", Some(one_second), || async {
+            Some(cacheable.clone())
+        })
+        .await?
+        {
+            ZEntry::Int(value) => value,
+            _ => panic!("Unexpected type"),
+        };
+
         sleep(one_second.mul(2));
         let result = ZCache::read("key1");
 
         if result.is_some() {
             panic!("Entry should be expired!");
         }
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn get_ether_price() -> Result<(), ZCacheError> {
+        if let ZEntry::Float(value) =
+            ZCache::fetch("ether-price", Some(Duration::from_secs(60)), || async {
+                Some(ZEntry::Float(1.1))
+            })
+            .await?
+        {
+            println!("Value: {}", value);
+            Ok(())
+        }
+        Ok(())
     }
 }
