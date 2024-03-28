@@ -15,7 +15,7 @@ enum ZEntry {
 }
 ```
 
-`ZCache` module exposes `read`, `write` and `fetch` methods:
+`ZCache` module exposes `fetch`, `read`, `write` and `clear` methods:
 
 ### `fetch`
 
@@ -59,6 +59,14 @@ fn get_ether_price() -> Some(f64) {
 ```
 
 In the above example, the async function `write` can periodically refresh price fetched from an URL. The advantage of `read` over `fetch` is that it's not `async`, so it's possible to use it in non-async parts of your application.
+
+### `clear` 
+
+```rust
+  ZCache::clear();
+```
+
+Use it to remove all the cache entires.
 
 ## Status
 

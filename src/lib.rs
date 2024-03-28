@@ -72,6 +72,12 @@ impl ZCache {
             ZCACHE_STORE.insert(key, (valid_until, Box::new(value)));
         }
     }
+
+    pub fn clear() {
+        unsafe {
+            ZCACHE_STORE = Lazy::new(HashMap::new);
+        }
+    }
 }
 
 fn now_in_millis() -> u128 {
@@ -90,6 +96,7 @@ mod tests {
 
     #[tokio::test]
     async fn read_write_works() {
+        ZCache::clear();
         let cacheable = ZEntry::Int(1);
         let one_second = Duration::from_secs(1);
         ZCache::write("key1", cacheable, Some(one_second));
@@ -119,6 +126,7 @@ mod tests {
 
     #[tokio::test]
     async fn fetch_works() {
+        ZCache::clear();
         let cacheable = ZEntry::Int(1);
         let result = ZCache::fetch("key1", None, || async { Some(cacheable.clone()) }).await;
 
@@ -130,6 +138,7 @@ mod tests {
 
     #[tokio::test]
     async fn fetch_expiry_works() -> Result<(), ZCacheError> {
+        ZCache::clear();
         let cacheable = ZEntry::Int(1);
         let one_second = Duration::from_secs(1);
         let result = ZCache::fetch("key1", Some(one_second), || async {
