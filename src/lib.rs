@@ -141,7 +141,7 @@ mod tests {
             _ => panic!("Unexpected value"),
         }
 
-        let result = match ZCache::fetch("key1", Some(one_second), || async {
+        match ZCache::fetch("key1", Some(one_second), || async {
             Some(cacheable.clone())
         })
         .await?
