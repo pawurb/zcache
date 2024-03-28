@@ -1,13 +1,13 @@
 [package]
 authors = ["Pawel Urbanek <contact@pawelurbanek.com>"]
 categories = ["cache"]
-description = "Simple in-memory cache with auto-expiration"
+description = "Simple in-memory Rust cache with time-based expiration"
 edition = "2021"
 license = "MIT"
 name = "zcache"
 readme = "README.md"
 repository = "https://github.com/pawurb/zcache"
-version = "0.0.1"
+version = "0.0.2"
 
 [dependencies]
 once_cell = "1.19.0"
