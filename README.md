@@ -73,3 +73,5 @@ Use it to remove all the cache entires.
 All these methods are just fancy wrappers over `unsafe` mutable static variable, so proceed with caution. Data races in multithreaded environments are expected. But, since I'm using it only for caching, I assumed it's acceptable. 
 
 I'm using `zcache` in a production app, but please treat it as proof of concept. I have limited Rust experience, so feedback is appreciated.
+
+**[Update]** it seems to be randomly segfaulting, so better don't use it.
